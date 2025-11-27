@@ -1,3 +1,5 @@
-from Functionality.prompt_response import *
+import functions as f
 
-prompt = input("Enter your prompt --> ") 
+x = f.prompt_response_generator(["the"], 1)
+for word in x:
+    print(word, end=" ")
