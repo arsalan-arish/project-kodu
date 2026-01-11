@@ -75,7 +75,7 @@ def prompt_response_generator(prompt:list, w:int, n:int, depth:int = 0):
     for i in range(w):
         ans1 = n_gram_predictor(tuple(prompt), prediction_dict1)
         if type(ans1) == str:
-            if len(prompt) >= 10:
+            if len(prompt) >= 10 and depth > 0:
                 prompt.pop(0)
             prompt.append(ans1)
             response.append(ans1)
