@@ -1,13 +1,14 @@
 import random
 from pathlib import Path
 import json
-from copy import copy, deepcopy
+from copy import deepcopy
+
 
 def data_formatter(p: Path, n: int, readfromCache: bool = False) -> dict:
     """Takes the txt file and the formatting number 'n' (based on n-gram) and returns prediction_dict"""
     if readfromCache:
-        p = Path.cwd() / "cache" / f"prediction_dict_{n}_gram"
-        prediction_dict = json.loads(p.read_text())
+        p = Path.cwd() / "cache" / f"prediction_dict_{n}_gram.json"
+        prediction_dict = json.loads(p.read_text()).keys().split()
         return prediction_dict
 
     words_list = list(p.read_text().lower().split())
@@ -18,7 +19,7 @@ def data_formatter(p: Path, n: int, readfromCache: bool = False) -> dict:
 
     prediction_dict = dict()
     for pair_list in pairs_list:
-        context: list = pair_list[:-1]
+        context: tuple = tuple(pair_list[:-1])
         prediction: str = pair_list[-1]
         if not context in prediction_dict:
             prediction_dict[context] = dict()
@@ -31,8 +32,8 @@ def data_formatter(p: Path, n: int, readfromCache: bool = False) -> dict:
         for prediction in prediction_dict[context]:
             prediction_dict[context][prediction] /= totalSum
 
-    p = Path.cwd() / "cache" / f"prediction_dict_{n}_gram"
-    p.write_text(json.dumps(prediction_dict))
+    p = Path.cwd() / "cache" / f"prediction_dict_{n}_gram.json"
+    p.write_text()
 
     return prediction_dict
 
@@ -42,24 +43,25 @@ def n_gram_predictor(context : list, prediction_dict : dict, n: int): # n means 
     for i in range(len(context)):
         context[i] = context[i].lower()
 
-    if context in prediction_dict:
+    if tuple(context) in prediction_dict:
         r = random.randint(1,100) / 100
         temp = 0 # Store value for the previous constant in the below loop
-        for prediction, constant in prediction_dict[context].items():
+        for prediction, constant in prediction_dict[tuple(context)].items():
             if r > temp and r < constant:
                 return prediction
-            temp = copy(constant)
+            temp = constant
     else:
         raise Exception("The context cannot be found in training data (prediction_dict)")
     
 
-def prompt_response_generator(prompt: list) -> list:
-    pass
+def prompt_response_generator(prompt: list, responselen: int) -> list:
+    n = len(prompt)+1
+    prediction_dict = data_formatter(Path('sample-data.txt'), n)
+    response = n_gram_predictor(prompt, prediction_dict, n)
+    return list([response])# type: ignore pylance
+
 
 # def prompt_response_generator(prompt: list, w: int, n: int, depth: int = 0):
-
-#     for i in range(len(prompt)):
-#         prompt[i] = prompt[i].lower()
     
 #     prediction_dict1 = data_formatter(Path("sample-data.txt"),n+1)
 #     response = []
