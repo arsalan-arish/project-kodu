@@ -1,18 +1,21 @@
-from random import randint
+from random import randint, choice
 from pathlib import Path
 import json
+import traceback
 
-CACHE_PATH = Path() / "cache"
 
-def data_formatter(dataFile: Path, n: int, readFromCache: bool = False) -> dict:
+def data_formatter(dataFile: Path, n: int, preferCache: bool = True) -> dict:
     """
     Takes the txt file containing data, and the formatting number 'n' (based on n-gram) 
     and returns prediction_dict.
     """
-    cachePath = CACHE_PATH / f"prediction_dict_{n}_gram.json"
-    if readFromCache:
-        prediction_dict = json.loads(cachePath.read_text())
-        return prediction_dict
+    cachePath = Path() / f"cache" / dataFile.name / f"prediction_dict_{n}_gram.json"
+    if preferCache:
+        try:
+            prediction_dict = json.loads(cachePath.read_text())
+            return prediction_dict
+        except FileNotFoundError as e:
+            pass
 
     words_list = dataFile.read_text().lower().split()
 
@@ -41,11 +44,28 @@ def data_formatter(dataFile: Path, n: int, readFromCache: bool = False) -> dict:
     return prediction_dict
 
 
-def n_gram_predictor(context : str, prediction_dict : dict, n: int) -> str: # type: ignore pylance
+def n_gram_predictor(context : str, useFallBackAlgorithm: bool = False) -> str: # type: ignore pylance
     context = context.lower()
+    n = len(context.split()) + 1
+    prediction_dict = data_formatter(Path('tests/sample_data.txt'), n)
+
+
     if context not in prediction_dict:
-        raise Exception("The context cannot be found in training data (prediction_dict)")
+        if not useFallBackAlgorithm:
+            raise Exception(f"The context {context} cannot be found in training data (prediction_dict)")
+        temp_context = context.split()
+        temp_context.pop(0)
+        context = " ".join(temp_context)
+        word = n_gram_predictor(context, True)
+        return word 
     
+    # First check if all the weights are exactly equal. If they are, then return a flat random choice
+    weights: list = list(prediction_dict[context].values())
+    firstWeight: float = weights[0]
+    for weight in weights:
+        if not (weight == firstWeight):
+            return choice(list(prediction_dict[context].keys()))
+
     r = randint(1, 100) / 100
     range_start = 0
     range_end = 0
@@ -54,17 +74,27 @@ def n_gram_predictor(context : str, prediction_dict : dict, n: int) -> str: # ty
         if r > range_start and r < range_end:
             return prediction
         range_start += weight
-        
+
+    #! Yesterday, a program was able to raise this when 'birds' prompt was given and a big responseLen
+    #! Work on it
+    raise Exception("THERE IS A SUBTLE BUG IN CORE PREDICTION ALGORITHM! lOOK")
     
 
 def prompt_response_generator(prompt: str, responseLen: int) -> str:
-    n = len(prompt.split()) + 1
-    prediction_dict = data_formatter(Path('tests/sample_data.txt'), n, True)
     response = []
 
-    #! Fix this SECTION
     for _ in range(responseLen):
-        word = n_gram_predictor(prompt, prediction_dict, n)
+        try:
+            word = n_gram_predictor(prompt, useFallBackAlgorithm=True)
+        except Exception as e:
+            traceback.print_exc()
+            print("COULD NOT GENERATE FULL RESPONSE")
+            break
+
         response.append(word)
+        temp_prompt = prompt.split()
+        temp_prompt.append(word)
+        temp_prompt.pop(0)
+        prompt = " ".join(temp_prompt)
 
     return " ".join(response)
