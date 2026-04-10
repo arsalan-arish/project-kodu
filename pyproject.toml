@@ -1,0 +1,26 @@
+[project]
+name = "kodu"
+version = "0.1.0"
+description = "Kodu, A small AI model made from scratch based on n-gram architecture"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = []
+license = "MIT"
+authors = [
+  { name="Arsalan Arish", email="mail@arsalanarish.com" },
+]
+maintainers = [
+  { name="Arsalan Arish", email="mail@arsalanarish.com" },
+]
+keywords = ["n-gram", "AI Model"]
+
+[project.urls]
+Repository = "https://github.com/arsalan-arish/project-kodu"
+
+[build-system]
+requires = ["uv_build>=0.9.0"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-root = "src"
+module-name = "kodu"
