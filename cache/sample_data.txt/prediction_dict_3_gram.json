@@ -1,7 +1,4 @@
 {
-    "": {
-        "conjecture.": 1.0
-    },
     "\"small wins\"": {
         "and": 1.0
     },
@@ -813,7 +810,7 @@
     "a stranger": {
         "who": 1.0
     },
-    "a stranger\u00e2\u20ac\u2122s": {
+    "a strangers": {
         "bicycle": 1.0
     },
     "a stray": {
@@ -1382,9 +1379,6 @@
         "new": 0.09090909090909091,
         "that": 0.18181818181818182,
         "the": 0.2727272727272727
-    },
-    "and friendly": {
-        "conjecture.": 1.0
     },
     "and frying": {
         "oil.": 1.0
@@ -4927,9 +4921,6 @@
     "friend. she": {
         "carried": 1.0
     },
-    "friendly": {
-        "conjecture.": 1.0
-    },
     "friendly invitation.": {
         "she": 1.0
     },
@@ -7562,9 +7553,6 @@
     "music. he": {
         "fixed": 1.0
     },
-    "mystery and": {
-        "friendly": 1.0
-    },
     "mystery that": {
         "had": 1.0
     },
@@ -8284,7 +8272,7 @@
         "different": 0.1,
         "ferry": 0.1,
         "fogged": 0.1,
-        "stranger\u00e2\u20ac\u2122s": 0.1
+        "strangers": 0.1
     },
     "on all": {
         "night": 1.0
@@ -11063,6 +11051,9 @@
     "strangers and": {
         "used": 1.0
     },
+    "strangers bicycle": {
+        "seat.": 1.0
+    },
     "strangers cheer": {
         "anyway.": 1.0
     },
@@ -11075,9 +11066,6 @@
     "strangers. he": {
         "kept": 0.5,
         "refurbished": 0.5
-    },
-    "stranger\u00e2\u20ac\u2122s bicycle": {
-        "seat.": 1.0
     },
     "stray dog": {
         "accepted": 1.0

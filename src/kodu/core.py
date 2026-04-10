@@ -20,7 +20,7 @@ def data_formatter(dataFile: Path, n: int, preferCache: bool = True) -> dict:
     words_list = dataFile.read_text().lower().split()
 
     pairs_list = []
-    for i in range(len(words_list)):
+    for i in range(len(words_list) - n - 1):
         pairs_list.append(words_list[i:i+n])
 
     prediction_dict = {}
@@ -44,7 +44,7 @@ def data_formatter(dataFile: Path, n: int, preferCache: bool = True) -> dict:
     return prediction_dict
 
 
-def n_gram_predictor(context : str, useFallBackAlgorithm: bool = False) -> str: # type: ignore pylance
+def n_gram_predictor(context: str, useFallBackAlgorithm: bool = True) -> str: # type: ignore pylance
     context = context.lower()
     n = len(context.split()) + 1
     prediction_dict = data_formatter(Path('tests/sample_data.txt'), n)
@@ -54,6 +54,8 @@ def n_gram_predictor(context : str, useFallBackAlgorithm: bool = False) -> str: 
         if not useFallBackAlgorithm:
             raise Exception(f"The context {context} cannot be found in training data (prediction_dict)")
         temp_context = context.split()
+        if len(temp_context) == 1:
+            raise Exception(f"The context {context} cannot be found in training data (prediction_dict)")
         temp_context.pop(0)
         context = " ".join(temp_context)
         word = n_gram_predictor(context, True)
@@ -63,7 +65,7 @@ def n_gram_predictor(context : str, useFallBackAlgorithm: bool = False) -> str: 
     weights: list = list(prediction_dict[context].values())
     firstWeight: float = weights[0]
     for weight in weights:
-        if not (weight == firstWeight):
+        if weight != firstWeight:
             return choice(list(prediction_dict[context].keys()))
 
     r = randint(1, 100) / 100
@@ -75,17 +77,28 @@ def n_gram_predictor(context : str, useFallBackAlgorithm: bool = False) -> str: 
             return prediction
         range_start += weight
 
+    #* Debugging part ->
     #! Yesterday, a program was able to raise this when 'birds' prompt was given and a big responseLen
     #! Work on it
+    """
+    Exception: THERE IS A SUBTLE BUG IN CORE PREDICTION ALGORITHM! lOOK
+    COULD NOT GENERATE FULL RESPONSE
+    and whispered them to friends who loved listening. a manuscript draft sat open on a desk
+    """
+    print(prediction_dict[context])
+    print(r)
     raise Exception("THERE IS A SUBTLE BUG IN CORE PREDICTION ALGORITHM! lOOK")
     
 
-def prompt_response_generator(prompt: str, responseLen: int) -> str:
-    response = []
+def prompt_response_generator(prompt: str, responseLen: int, contextCapacity: int = 5) -> str:
+    if contextCapacity < 0 or contextCapacity > 10:
+        #* NOTE: A capacity of 10 has the range to create 2 - 11 grams prediction_dicts
+        raise Exception("Please give a valid context capacity, preferred to be btw 1-10.\nElse too much memory and compute will be taken\nMore capacity leads to better precision though")
 
+    response = []
     for _ in range(responseLen):
         try:
-            word = n_gram_predictor(prompt, useFallBackAlgorithm=True)
+            word = n_gram_predictor(prompt)
         except Exception as e:
             traceback.print_exc()
             print("COULD NOT GENERATE FULL RESPONSE")
@@ -94,7 +107,8 @@ def prompt_response_generator(prompt: str, responseLen: int) -> str:
         response.append(word)
         temp_prompt = prompt.split()
         temp_prompt.append(word)
-        temp_prompt.pop(0)
+        if len(temp_prompt) > contextCapacity:
+            temp_prompt.pop(0)
         prompt = " ".join(temp_prompt)
 
     return " ".join(response)

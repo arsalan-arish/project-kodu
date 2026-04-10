@@ -1,7 +1,4 @@
 {
-    "": {
-        "conjecture.": 1.0
-    },
     "\"small wins\" and": {
         "read": 1.0
     },
@@ -1032,7 +1029,7 @@
     "a stranger who": {
         "smelled": 1.0
     },
-    "a stranger\u00e2\u20ac\u2122s bicycle": {
+    "a strangers bicycle": {
         "seat.": 1.0
     },
     "a stray dog": {
@@ -1728,9 +1725,6 @@
         "lessons": 0.3333333333333333,
         "process": 0.3333333333333333,
         "repair": 0.3333333333333333
-    },
-    "and friendly": {
-        "conjecture.": 1.0
     },
     "and frying oil.": {
         "the": 1.0
@@ -5612,9 +5606,6 @@
     "friend. she carried": {
         "a": 1.0
     },
-    "friendly": {
-        "conjecture.": 1.0
-    },
     "friendly invitation. she": {
         "paused": 1.0
     },
@@ -7435,7 +7426,7 @@
         "hosted": 1.0
     },
     "landed on a": {
-        "stranger\u00e2\u20ac\u2122s": 1.0
+        "strangers": 1.0
     },
     "landed. he saved": {
         "drafts": 1.0
@@ -8720,9 +8711,6 @@
     "music. he fixed": {
         "a": 1.0
     },
-    "mystery and friendly": {
-        "conjecture.": 1.0
-    },
     "mystery that had": {
         "puzzled": 1.0
     },
@@ -8842,9 +8830,6 @@
     },
     "neighborhood group planted": {
         "a": 1.0
-    },
-    "neighborhood mystery and": {
-        "friendly": 1.0
     },
     "neighbors and recorded": {
         "stories": 1.0
@@ -9546,7 +9531,7 @@
     "on a fogged": {
         "mirror.": 1.0
     },
-    "on a stranger\u00e2\u20ac\u2122s": {
+    "on a strangers": {
         "bicycle": 1.0
     },
     "on all night": {
@@ -12579,6 +12564,9 @@
     "strangers and used": {
         "them": 1.0
     },
+    "strangers bicycle seat.": {
+        "he": 1.0
+    },
     "strangers cheer anyway.": {
         "a": 1.0
     },
@@ -12593,9 +12581,6 @@
     },
     "strangers. he refurbished": {
         "a": 1.0
-    },
-    "stranger\u00e2\u20ac\u2122s bicycle seat.": {
-        "he": 1.0
     },
     "stray dog accepted": {
         "the": 1.0

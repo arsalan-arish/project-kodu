@@ -1,6 +1,9 @@
 from kodu import prompt_response_generator
 from random import randint
 
+# x = prompt_response_generator("sat open on a desk", 1)
+# print(x)
+
 #* Creating an interactive shell
 print("\n---------+++++++++++-------- WELCOME TO KODU! --------+++++++++++---------\n")
 print("- Give prompt and get responses\n- Enter q to exit\n- Enter r to set constant response length\n")
@@ -19,7 +22,10 @@ while True:
             y = input("-=-=-=> Enter a valid int -> ")
         continue
 
+    elif x == "":
+        continue
+
     print()
-    res: str = prompt_response_generator(x, randint(10, 50) if not responseLen else responseLen)
+    res: str = prompt_response_generator(x, randint(16, 30) if not responseLen else responseLen)
     print(res, "\n")
     # Print this in color (better)
