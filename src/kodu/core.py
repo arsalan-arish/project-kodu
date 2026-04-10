@@ -80,11 +80,22 @@ def n_gram_predictor(context: str, useFallBackAlgorithm: bool = True) -> str: # 
     #* Debugging part ->
     #! Yesterday, a program was able to raise this when 'birds' prompt was given and a big responseLen
     #! Work on it
-    """
-    Exception: THERE IS A SUBTLE BUG IN CORE PREDICTION ALGORITHM! lOOK
-    COULD NOT GENERATE FULL RESPONSE
-    and whispered them to friends who loved listening. a manuscript draft sat open on a desk
-    """
+    # """
+    # Exception: THERE IS A SUBTLE BUG IN CORE PREDICTION ALGORITHM! lOOK
+    # COULD NOT GENERATE FULL RESPONSE
+    # and whispered them to friends who loved listening. a manuscript draft sat open on a desk
+
+    # {'loved': 1.0}
+    # 1.0
+    # Traceback (most recent call last):
+    # File "C:\Users\Arsalan Arish\Desktop\Github\project-kodu\src\kodu\core.py", line 101, in prompt_response_generator
+    #     word = n_gram_predictor(prompt)
+    # File "C:\Users\Arsalan Arish\Desktop\Github\project-kodu\src\kodu\core.py", line 90, in n_gram_predictor
+    #     raise Exception("THERE IS A SUBTLE BUG IN CORE PREDICTION ALGORITHM! lOOK")
+    # Exception: THERE IS A SUBTLE BUG IN CORE PREDICTION ALGORITHM! lOOK
+    # COULD NOT GENERATE FULL RESPONSE
+    # and whispered them to friends who
+    # """
     print(prediction_dict[context])
     print(r)
     raise Exception("THERE IS A SUBTLE BUG IN CORE PREDICTION ALGORITHM! lOOK")
