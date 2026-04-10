@@ -45,14 +45,15 @@ def n_gram_predictor(context : str, prediction_dict : dict, n: int) -> str: # ty
     context = context.lower()
     if context not in prediction_dict:
         raise Exception("The context cannot be found in training data (prediction_dict)")
-
-    #! Verify this core prediction section
+    
     r = randint(1, 100) / 100
-    temp = 0 # Store value for the previous constant in the below loop
+    range_start = 0
+    range_end = 0
     for prediction, weight in prediction_dict[context].items():
-        if r > temp and r < weight:
+        range_end += weight
+        if r > range_start and r < range_end:
             return prediction
-        temp = weight
+        range_start += weight
         
     
 
