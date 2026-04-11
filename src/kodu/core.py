@@ -4,18 +4,19 @@ import json
 import traceback
 
 
-def data_formatter(dataFile: Path, n: int, preferCache: bool = True) -> dict:
+def data_formatter(n: int, preferCache: bool = True) -> dict:
     """
     Takes the txt file containing data, and the formatting number 'n' (based on n-gram) 
     and returns prediction_dict.
     """
-    cachePath = Path() / f"cache" / dataFile.name / f"prediction_dict_{n}_gram.json"
+    dataFile = Path(__file__).parent / "raw_data" / "sample_data" / "sample_data.txt"
+    cachePath = Path(__file__).parent / "formatted_data" / dataFile.stem / f"prediction_dict_{n}_gram.json"
     if preferCache:
         try:
             prediction_dict = json.loads(cachePath.read_text())
             return prediction_dict
         except FileNotFoundError as e:
-            pass
+            print("Not reading from cache")
 
     words_list = dataFile.read_text().lower().split()
 
@@ -47,7 +48,7 @@ def data_formatter(dataFile: Path, n: int, preferCache: bool = True) -> dict:
 def n_gram_predictor(context: str, useFallBackAlgorithm: bool = True) -> str:
     context = context.lower()
     n = len(context.split()) + 1
-    prediction_dict = data_formatter(Path('tests/sample_data.txt'), n)
+    prediction_dict = data_formatter(n)
 
 
     if context not in prediction_dict:
@@ -83,7 +84,7 @@ def n_gram_predictor(context: str, useFallBackAlgorithm: bool = True) -> str:
 
 def prompt_response_generator(prompt: str, responseLen: int, contextCapacity: int = 5) -> str:
     if contextCapacity < 0 or contextCapacity > 10:
-        #* INFO: A capacity of 10 has the range to create 2 - 11 grams prediction_dicts
+        # INFO: A capacity of 10 has the range to create 2 - 11 grams prediction_dicts
         raise Exception("\033[31mPlease give a valid context capacity, preferred to be btw 1-10.\nElse too much memory and compute will be taken\nMore capacity leads to better precision though\033[0m")
 
     response = []
