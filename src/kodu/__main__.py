@@ -1,10 +1,23 @@
 def main():
     from kodu import prompt_response_generator
     from random import randint
+    from sys import argv
+
+    argv.pop(0)
+    match len(argv):
+        case 0:
+            print("Quick Help commands list will be coming soon!")
+            exit()
+        case 1:
+            if argv[0] == "run":
+                pass # Lauch shell below
+            else:
+                print("Please give a vaild command to kodu!")
+                exit()
 
     #* Creating an interactive shell
     print("\n---------+++++++++++-------- WELCOME TO KODU! --------+++++++++++---------\n")
-    print("- Give prompt and get responses\n- Enter q to exit\n- Enter r to set constant response length\nEnter c to set text color\n")
+    print("- Give prompt and get responses\n- Enter q to exit\n- Enter r to set constant response length\n- Enter c to set text color\n")
     responseLen = 0
     colors = {
         "red": 1,
@@ -47,6 +60,5 @@ def main():
             continue
 
         print()
-        res: str = prompt_response_generator(x, randint(16, 30) if not responseLen else responseLen)
-        print(f"\033[3{color}m{res}\033[0m\n")
-        
+        response: str = prompt_response_generator(x, randint(30, 50) if not responseLen else responseLen)
+        print(f"\033[3{color}m{response}\033[0m\n")

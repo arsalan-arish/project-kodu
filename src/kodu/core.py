@@ -44,7 +44,7 @@ def data_formatter(dataFile: Path, n: int, preferCache: bool = True) -> dict:
     return prediction_dict
 
 
-def n_gram_predictor(context: str, useFallBackAlgorithm: bool = True) -> str: # type: ignore pylance
+def n_gram_predictor(context: str, useFallBackAlgorithm: bool = True) -> str:
     context = context.lower()
     n = len(context.split()) + 1
     prediction_dict = data_formatter(Path('tests/sample_data.txt'), n)
@@ -52,13 +52,13 @@ def n_gram_predictor(context: str, useFallBackAlgorithm: bool = True) -> str: # 
 
     if context not in prediction_dict:
         if not useFallBackAlgorithm:
-            raise Exception(f"The context {context} cannot be found in training data (prediction_dict)")
+            raise Exception(f"\033[31mThe context\033[0m \033[36m'{context}'\033[0m \033[31mcannot be found in training data (prediction_dict)\nAnd useFallBackAlgorithm was set to False\033[0m")
         temp_context = context.split()
         if len(temp_context) == 1:
-            raise Exception(f"The context {context} cannot be found in training data (prediction_dict)")
+            raise Exception(f"\033[31mThe context\033[0m \033[36m'{context}'\033[0m \033[31mcannot be found in training data (prediction_dict)\033[0m")
         temp_context.pop(0)
         context = " ".join(temp_context)
-        word = n_gram_predictor(context, True)
+        word = n_gram_predictor(context)
         return word 
     
     # First check if all the weights are exactly equal. If they are, then return a flat random choice
@@ -73,38 +73,18 @@ def n_gram_predictor(context: str, useFallBackAlgorithm: bool = True) -> str: # 
     range_end = 0
     for prediction, weight in prediction_dict[context].items():
         range_end += weight
-        if r > range_start and r < range_end:
+        if r >= range_start and r <= range_end:
             return prediction
         range_start += weight
 
-    #* Debugging part ->
-    #! Yesterday, a program was able to raise this when 'birds' prompt was given and a big responseLen
-    #! Work on it
-    # """
-    # Exception: THERE IS A SUBTLE BUG IN CORE PREDICTION ALGORITHM! lOOK
-    # COULD NOT GENERATE FULL RESPONSE
-    # and whispered them to friends who loved listening. a manuscript draft sat open on a desk
 
-    # {'loved': 1.0}
-    # 1.0
-    # Traceback (most recent call last):
-    # File "C:\Users\Arsalan Arish\Desktop\Github\project-kodu\src\kodu\core.py", line 101, in prompt_response_generator
-    #     word = n_gram_predictor(prompt)
-    # File "C:\Users\Arsalan Arish\Desktop\Github\project-kodu\src\kodu\core.py", line 90, in n_gram_predictor
-    #     raise Exception("THERE IS A SUBTLE BUG IN CORE PREDICTION ALGORITHM! lOOK")
-    # Exception: THERE IS A SUBTLE BUG IN CORE PREDICTION ALGORITHM! lOOK
-    # COULD NOT GENERATE FULL RESPONSE
-    # and whispered them to friends who
-    # """
-    print(prediction_dict[context])
-    print(r)
-    raise Exception("THERE IS A SUBTLE BUG IN CORE PREDICTION ALGORITHM! lOOK")
+    raise Exception("\033[31mTHERE IS A SUBTLE BUG IN CORE PREDICTION ALGORITHM! lOOK\033[0m")
     
 
 def prompt_response_generator(prompt: str, responseLen: int, contextCapacity: int = 5) -> str:
     if contextCapacity < 0 or contextCapacity > 10:
-        #* NOTE: A capacity of 10 has the range to create 2 - 11 grams prediction_dicts
-        raise Exception("Please give a valid context capacity, preferred to be btw 1-10.\nElse too much memory and compute will be taken\nMore capacity leads to better precision though")
+        #* INFO: A capacity of 10 has the range to create 2 - 11 grams prediction_dicts
+        raise Exception("\033[31mPlease give a valid context capacity, preferred to be btw 1-10.\nElse too much memory and compute will be taken\nMore capacity leads to better precision though\033[0m")
 
     response = []
     for _ in range(responseLen):
@@ -112,7 +92,8 @@ def prompt_response_generator(prompt: str, responseLen: int, contextCapacity: in
             word = n_gram_predictor(prompt)
         except Exception as e:
             traceback.print_exc()
-            print("COULD NOT GENERATE FULL RESPONSE")
+            print()
+            print("\033[31mCOULD NOT GENERATE FULL RESPONSE\033[0m")
             break
 
         response.append(word)
